@@ -1,2 +1,33 @@
 http://www.testautomationguru.com/jmeter-distributed-load-testing-using-docker/
 
+#Fire up these terminal commands to start slave
+sudo docker run -dit --name slave01 vinsdocker/jmserver /bin/bash
+sudo docker run -dit --name slave02 vinsdocker/jmserver /bin/bash
+sudo docker run -dit --name slave03 vinsdocker/jmserver /bin/bash
+
+#Start up master
+sudo docker run -dit --name master vinsdocker/jmmaster /bin/bash
+
+#find out the ip address of these dockers 
+sudo docker inspect --format '{{ .Name }} => {{ .NetworkSettings.IPAddress }}' $(sudo docker ps -a -q)
+#Copy jmx file to master docker 
+sudo docker exec -i master sh -c 'cat > /jmeter/apache-jmeter-2.13/bin/docker-test.jmx' < newAdSDK.jmx
+
+#bash to master container
+sudo docker exec -it master /bin/bash
+
+#Start the jmeter using :
+jmeter -n -t .jmx -R[Ip1 ,IP2,IP3]
+
+
+
+
+
+
+
+
+
+
+
+
+
